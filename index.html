@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Gmina Siedlce</title>
+
+<!-- Favicon -->
+<link rel="icon" href="images/Fotoram.io-removebg-preview.svg.png" type="image/png">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(180deg, #0a0a0a, #1a1a1a);
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  /* pierwsze tło od razu */
+  background-image: url('images/ffe-1.png');
+}
+header::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+header .content { position: relative; z-index:2; }
+header img.logo {
+  width: 280px; max-width: 80%; margin-bottom:20px;
+  animation: logoZoom 2s ease-out forwards;
+}
+@keyframes logoZoom {
+  0% { transform: scale(0.5) rotate(-10deg); opacity:0; }
+  100% { transform: scale(1) rotate(0deg); opacity:1; }
+}
+header h1 {
+  font-size:3rem; font-weight:800; margin:0;
+  opacity:0; transform:translateY(40px);
+  animation: fadeUp 1.5s forwards 1s;
+}
+header p {
+  font-size:1.3rem; margin:15px 0 25px;
+  opacity:0; transform:translateY(40px);
+  animation: fadeUp 1.5s forwards 1.5s;
+}
+@keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+
+.countdown {
+  font-size: 2rem; font-weight:700;
+  background: rgba(255,255,255,0.1);
+  padding:12px 24px; border-radius:15px;
+  display:inline-block; margin-top:20px;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); box-shadow:0 0 10px rgba(255,255,255,0.4);}
+  50% { transform: scale(1.05); box-shadow:0 0 20px rgba(255,255,255,0.7);}
+}
+
+/* SECTIONS */
+section {
+  max-width:1000px; margin:70px auto; padding:0 20px; text-align:center;
+  opacity:0; transform:translateY(60px);
+  transition: all 1s ease;
+}
+section.visible { opacity:1; transform:translateY(0); }
+section h2 { font-size:2.2rem; margin-bottom:20px; }
+section p { font-size:1.1rem; line-height:1.7; color:#ccc; }
+
+/* COMMUNITY BUTTONS */
+.community {
+  margin-top:40px; display:flex; justify-content:center; gap:20px; flex-wrap:wrap;
+}
+.social-btn {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  width:220px; height:70px;
+  border-radius:12px; font-weight:600; color:white; text-decoration:none;
+  transition: all 0.3s ease; padding:0 20px; position: relative; overflow:hidden;
+}
+.social-btn img { width:32px; height:32px; }
+.social-btn.discord { background:#5865F2; }
+.social-btn.roblox { background:#FF0000; }
+.social-btn.tiktok { background:#69C9D0; }
+.social-btn:hover { transform: scale(1.05); box-shadow:0 0 15px rgba(255,255,255,0.4); }
+
+/* LANG SWITCH */
+.lang-switch { position: fixed; top:20px; right:20px; z-index:3; }
+.lang-switch button {
+  background:#222; color:#fff; border:none; padding:8px 15px;
+  margin-left:5px; border-radius:6px; cursor:pointer; font-weight:600;
+  transition: background 0.3s;
+}
+.lang-switch button:hover { background:#555; }
+
+/* FOOTER */
+footer { text-align:center; padding:25px; background:#111; font-size:0.9rem; color:#aaa; }
+
+/* ADMIN PANEL */
+.admin-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  background: rgba(20, 20, 20, 0.95);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 30px rgba(0, 150, 255, 0.5);
+  z-index: 1000;
+  display: none;
+  border: 2px solid #0099ff;
+}
+
+.admin-panel h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #0099ff;
+  font-size: 1.8rem;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-form label {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #333;
+  color: white;
+  margin-top: 5px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.admin-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.admin-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.admin-buttons button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#save-changes {
+  background: #0099ff;
+  color: white;
+}
+
+#save-changes:hover {
+  background: #0077cc;
+}
+
+#close-admin {
+  background: #ff4444;
+  color: white;
+}
+
+#close-admin:hover {
+  background: #cc3333;
+}
+
+.admin-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  display: none;
+}
+
+/* Click counter indicator */
+.click-counter {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 153, 255, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  z-index: 10;
+  display: none;
+}
+
+/* Login Modal */
+.login-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.login-box {
+  background: #222;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+}
+
+.login-box h2 {
+  margin-bottom: 15px;
+}
+
+.login-box input {
+  margin: 10px;
+  width: 90%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+}
+
+.login-box button {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #5865F2;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<!-- LANGUAGE SWITCH -->
+<div class="lang-switch">
+  <button onclick="setLang('en')">EN</button>
+  <button id="pl-button" onclick="handlePlClick()">PL</button>
+</div>
+
+<!-- Click counter indicator -->
+<div class="click-counter" id="click-counter">Kliknięcia: 0/5</div>
+
+<!-- HEADER -->
+<header id="main-header">
+  <div class="content">
+    <img class="logo" src="images/image-51.png" alt="Project Gmina Siedlce Logo">
+    <h1 id="title">Project Gmina Siedlce</h1>
+    <p id="subtitle">Juz niebawem</p>
+    <div class="countdown" id="countdown"></div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <h2 id="about-title">About the game</h2>
+  <p id="about-text">
+    Przejedź się malowniczymi drogami Polski w najrealistyczniejszej grze Roblox skupionej na Terenach Województwa Mazowieckiego, 
+    z niezwykle szczegółowymi środowiskami i wciągającą rozgrywką. (Co 2 tygodniowe updaty!)
+  </p>
+</section>
+
+<!-- COMMENTS -->
+<section id="comments">
+  <h2 id="comment-title">Your opinion matters</h2>
+  <p id="comment-text">
+    Tell us which scenery you like most – the countryside roads or the city streets?
+  </p>
+</section>
+
+<!-- COMMUNITY -->
+<section class="community">
+  <a href="https://www.roblox.com/pl/communities/16899138/Gmina-Ma-owice-Official-Group#!/about" target="_blank" class="social-btn roblox" id="roblox-btn">
+    <img src="images/BackgroundEraser_20251003_215216683.png" alt="Roblox"> <span id="roblox-text">Roblox Group</span>
+  </a>
+  <a href="https://discord.gg/cDxdGQU9KT" target="_blank" class="social-btn discord" id="discord-btn">
+    <img src="images/discord_PNG3.png" alt="Discord"> <span id="discord-text">Join our Discord</span>
+  </a>
+  <a href="Nie aktywny" target="_blank" class="social-btn tiktok" id="tiktok-btn">
+    <img src="images/BackgroundEraser_20251003_215236916.png" alt="TikTok"> <span id="tiktok-text">Official TikTok</span>
+  </a>
+</section>
+
+<!-- ADMIN PANEL -->
+<div class="admin-overlay" id="admin-overlay"></div>
+<div class="admin-panel" id="admin-panel">
+  <h2>Admin Panel</h2>
+  <form class="admin-form" id="admin-form">
+    <label>
+      Header Title:
+      <input type="text" id="admin-title" value="Project Gmina Siedlce">
+    </label>
+    
+    <label>
+      Header Subtitle:
+      <input type="text" id="admin-subtitle" value="Juz niebawem">
+    </label>
+    
+    <label>
+      About Title:
+      <input type="text" id="admin-about-title" value="About the game">
+    </label>
+    
+    <label>
+      About Text:
+      <textarea id="admin-about-text">Przejedź się malowniczymi drogami Polski w najrealistyczniejszej grze Roblox skupionej na Terenach Województwa Mazowieckiego, z niezwykle szczegółowymi środowiskami i wciągającą rozgrywką. (Co 2 tygodniowe updaty!)</textarea>
+    </label>
+    
+    <label>
+      Comments Title:
+      <input type="text" id="admin-comment-title" value="Your opinion matters">
+    </label>
+    
+    <label>
+      Comments Text:
+      <textarea id="admin-comment-text">Tell us which scenery you like most – the countryside roads or the city streets?</textarea>
+    </label>
+    
+    <label>
+      Release Date:
+      <input type="datetime-local" id="admin-release-date">
+    </label>
+    
+    <label>
+      Background Images (comma separated):
+      <textarea id="admin-backgrounds">ffe-1.png,Zrzut_ekranu_2025-10-03_194921.png,Zrzut_ekranu_2025-10-02_180635.png,imdwdwage-1.png,imeefage-1.png</textarea>
+    </label>
+    
+    <div class="admin-buttons">
+      <button type="button" id="save-changes">Save Changes</button>
+      <button type="button" id="close-admin">Close</button>
+    </div>
+  </form>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Project Gmina Siedlce. All rights reserved.</p>
+</footer>
+
+<script>
+// Background images rotation
+const header = document.getElementById('main-header');
+let backgrounds = [
+  'ffe-1.png',
+  'Zrzut_ekranu_2025-10-03_194921.png',
+  'Zrzut_ekranu_2025-10-02_180635.png',
+  'imdwdwage-1.png',
+  'imeefage-1.png'
+];
+let bgIndex = 0;
+setInterval(() => {
+  bgIndex = (bgIndex + 1) % backgrounds.length;
+  // transition tylko przy zmianie
+  header.style.transition = "background-image 1s ease-in-out";
+  header.style.backgroundImage = `url('${backgrounds[bgIndex]}')`;
+}, 5000);
+
+// Countdown
+let countDownDate = new Date("Oct 25, 2025 15:00:00").getTime();
+const countdownElement = document.getElementById("countdown");
+setInterval(() => {
+  const now = new Date().getTime();
+  const distance = countDownDate - now;
+  if(distance < 0) { countdownElement.innerHTML = "Released!"; return; }
+  const days = Math.floor(distance / (1000*60*60*24));
+  const hours = Math.floor((distance % (1000*60*60*24)) / (1000*60*60));
+  const minutes = Math.floor((distance % (1000*60*60)) / (1000*60));
+  const seconds = Math.floor((distance % (1000*60)) / 1000);
+  countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+},1000);
+
+// Language switch
+const langData = {
+  en: {
+    title: "Project Gmina Siedlce",
+    subtitle: "Mazovian ride around the outskirts of Siedlce.",
+    "about-title": "About the game",
+    "about-text": "Przejedź się malowniczymi drogami Polski w najrealistyczniejszej grze Roblox skupionej na Terenach Województwa Mazowieckiego.",
+    "comment-title": "Your opinion matters",
+    "comment-text": "Tell us which scenery you like most – the countryside roads or the city streets?",
+    "roblox-text": "Roblox Group",
+    "discord-text": "Join our Discord",
+    "tiktok-text": "Official TikTok"
+  },
+  pl: {
+    title: "Project Gmina Siedlce",
+    subtitle: "Mazowiecka jazda po obrzeżach Siedlec.",
+    "about-title": "O grze",
+    "about-text": "Przejedź się po ośnieżonych drogach województwa pomorskiego, w tym po Nowym Dworze Gdańskim. Realistyczne drogi, pola i wiejski klimat – wszystko w jednym miejscu!",
+    "comment-title": "Twoje zdanie się liczy",
+    "comment-text": "Powiedz nam, która sceneria bardziej Ci się podoba – wiejskie drogi czy ulice miasta?",
+    "roblox-text": "Grupa Roblox",
+    "discord-text": "Dołącz na nasz Discord",
+    "tiktok-text": "Oficjalny TikTok"
+  }
+};
+function setLang(lang) {
+  for(const id in langData[lang]){
+    const el=document.getElementById(id) || document.querySelector(`#${id}-text`);
+    if(el) el.innerText=langData[lang][id];
+  }
+}
+setLang('en');
+
+// Section animations on scroll
+const sections = document.querySelectorAll("section");
+const revealOnScroll = () => {
+  const trigger = window.innerHeight * 0.85;
+  sections.forEach(sec => {
+    const top = sec.getBoundingClientRect().top;
+    if(top < trigger) sec.classList.add("visible");
+  });
+};
+window.addEventListener("scroll", revealOnScroll);
+revealOnScroll();
+
+// Admin Panel Logic
+let plClickCount = 0;
+const clickCounter = document.getElementById('click-counter');
+const adminPanel = document.getElementById('admin-panel');
+const adminOverlay = document.getElementById('admin-overlay');
+
+function handlePlClick() {
+  // Set language to Polish
+  setLang('pl');
+  
+  // Increment click counter
+  plClickCount++;
+  
+  // Show click counter
+  clickCounter.style.display = 'block';
+  clickCounter.textContent = `Kliknięcia: ${plClickCount}/5`;
+  
+  // If clicked 5 times, show login modal
+  if (plClickCount >= 5) {
+    showAdminLogin();
+    plClickCount = 0; // Reset counter
+    clickCounter.style.display = 'none'; // Hide counter
+  }
+}
+
+function showAdminLogin() {
+  const modal = document.createElement("div");
+  modal.className = "login-modal";
+  modal.innerHTML = `
+    <div class="login-box">
+      <h2>Admin Login</h2>
+      <input type="text" id="adminUser" placeholder="Username">
+      <input type="password" id="adminPass" placeholder="Password">
+      <button id="adminSubmit">Login</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  modal.querySelector("#adminSubmit").addEventListener("click", () => {
+    const user = modal.querySelector("#adminUser").value;
+    const pass = modal.querySelector("#adminPass").value;
+
+    // Simple authentication (in a real app, this would be server-side)
+    if (user === "admin" && pass === "admin123") {
+      modal.remove();
+      showAdminPanel();
+    } else {
+      alert("Incorrect username or password.");
+    }
+  });
+}
+
+function showAdminPanel() {
+  // Populate admin form with current values
+  document.getElementById('admin-title').value = document.getElementById('title').textContent;
+  document.getElementById('admin-subtitle').value = document.getElementById('subtitle').textContent;
+  document.getElementById('admin-about-title').value = document.getElementById('about-title').textContent;
+  document.getElementById('admin-about-text').value = document.getElementById('about-text').textContent;
+  document.getElementById('admin-comment-title').value = document.getElementById('comment-title').textContent;
+  document.getElementById('admin-comment-text').value = document.getElementById('comment-text').textContent;
+  
+  // Set release date
+  const releaseDate = new Date(countDownDate);
+  document.getElementById('admin-release-date').value = releaseDate.toISOString().slice(0, 16);
+  
+  // Set backgrounds
+  document.getElementById('admin-backgrounds').value = backgrounds.join(',');
+  
+  // Show admin panel and overlay
+  adminPanel.style.display = 'block';
+  adminOverlay.style.display = 'block';
+}
+
+function hideAdminPanel() {
+  adminPanel.style.display = 'none';
+  adminOverlay.style.display = 'none';
+}
+
+function saveAdminChanges() {
+  // Update page content
+  document.getElementById('title').textContent = document.getElementById('admin-title').value;
+  document.getElementById('subtitle').textContent = document.getElementById('admin-subtitle').value;
+  document.getElementById('about-title').textContent = document.getElementById('admin-about-title').value;
+  document.getElementById('about-text').textContent = document.getElementById('admin-about-text').value;
+  document.getElementById('comment-title').textContent = document.getElementById('admin-comment-title').value;
+  document.getElementById('comment-text').textContent = document.getElementById('admin-comment-text').value;
+  
+  // Update countdown
+  const newReleaseDate = new Date(document.getElementById('admin-release-date').value);
+  countDownDate = newReleaseDate.getTime();
+  
+  // Update backgrounds
+  const newBackgrounds = document.getElementById('admin-backgrounds').value.split(',');
+  backgrounds = newBackgrounds;
+  
+  // Hide admin panel
+  hideAdminPanel();
+  
+  // Show success message
+  alert('Changes saved successfully!');
+}
+
+// Event listeners for admin panel
+document.getElementById('close-admin').addEventListener('click', hideAdminPanel);
+document.getElementById('save-changes').addEventListener('click', saveAdminChanges);
+adminOverlay.addEventListener('click', hideAdminPanel);
+</script>
+
+</body>
+</html>
